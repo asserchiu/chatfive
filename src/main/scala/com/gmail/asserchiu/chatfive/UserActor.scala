@@ -25,7 +25,7 @@ class UserActor extends Actor with ActorLogging {
             //   context.parent ! ChatManagerActor.GoOffline
             case _ =>
               log.info("In UserActor - command \"{}\" invalid.", command)
-              context.system.shutdown()
+              context.system.terminate()
           }
         case _ =>
           log.info("In UserActor - \"{}\" is a normal message", text)
