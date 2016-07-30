@@ -1,0 +1,18 @@
+package com.gmail.asserchiu.chatfive
+
+import akka.actor.{ Actor, ActorLogging, Props }
+
+class ChatManagerActor extends Actor with ActorLogging {
+  import ChatManagerActor._
+
+  def receive = {
+    case SetupSystem =>
+      log.info("In ChatManagerActor - receive case SetupSystem")
+      context.system.shutdown()
+  }
+}
+
+object ChatManagerActor {
+  val props = Props[ChatManagerActor]
+  case object SetupSystem
+}

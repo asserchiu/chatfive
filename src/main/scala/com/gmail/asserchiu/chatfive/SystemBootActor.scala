@@ -8,7 +8,8 @@ class SystemBootActor extends Actor with ActorLogging {
   def receive = {
     case Initialize =>
       log.info("In SystemBootActor - receive case Initialize")
-      context.system.shutdown()
+      val theChatManagerActor = context.actorOf(ChatManagerActor.props, "theChatManagerActor")
+      theChatManagerActor ! ChatManagerActor.SetupSystem
   }
 }
 
