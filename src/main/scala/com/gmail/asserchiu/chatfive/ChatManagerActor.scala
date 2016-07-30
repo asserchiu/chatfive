@@ -13,6 +13,9 @@ class ChatManagerActor extends Actor with ActorLogging {
     case Shutdown =>
       log.info("In ChatManagerActor - receive case Shutdown")
       context.system.shutdown()
+    case UserActor.Speak(text: String) =>
+      log.info("In ChatManagerActor - receive case UserActor.Speak(\"{}\")", text)
+      context.system.shutdown()
   }
 }
 

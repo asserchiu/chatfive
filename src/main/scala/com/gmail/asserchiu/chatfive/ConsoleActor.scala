@@ -9,7 +9,8 @@ class ConsoleActor extends Actor with ActorLogging {
   def receive = {
     case EnableConsole =>
       log.info("In ConsoleActor - receive case EnableConsole")
-      sender() ! MessageFromConsole(readLine("Input message: "))
+      println("Supported Commands: Shutdown, GoOnline, GoOffline (Case insensitive)")
+      sender() ! MessageFromConsole(readLine("Input message or `exec <command>`: "))
   }
 }
 
