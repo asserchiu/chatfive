@@ -8,7 +8,8 @@ class ChatManagerActor extends Actor with ActorLogging {
   def receive = {
     case SetupSystem =>
       log.info("In ChatManagerActor - receive case SetupSystem")
-      context.system.shutdown()
+      val theUserActor = context.actorOf(UserActor.props, "theUserActor")
+      theUserActor ! UserActor.Begin
   }
 }
 
