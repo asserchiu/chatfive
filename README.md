@@ -1,4 +1,4 @@
-activator-akka-scala-seed
+chatfive
 =========================
 
-A minimal seed template for an Akka with Scala build 
+A simple Scala + Akka sample.
