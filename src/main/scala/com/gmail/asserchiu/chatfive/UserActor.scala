@@ -23,6 +23,10 @@ class UserActor extends Actor with ActorLogging {
               context.parent ! ChatManagerActor.GoOnline
             case "gooffline" | "offline" | "off" =>
               context.parent ! ChatManagerActor.GoOffline
+            case "addchatparticipant" | "add" =>
+              context.parent ! ChatManagerActor.AddChatParticipant
+            // case "removechatparticipant" | "remove" | "kill" =>
+            //   context.parent ! ChatManagerActor.RemoveChatParticipant(readLine("Input ChatParticipant child name: "))
             case _ =>
               log.info("In UserActor - command \"{}\" invalid.", command)
           }
@@ -30,7 +34,8 @@ class UserActor extends Actor with ActorLogging {
           log.info("In UserActor - \"{}\" is a normal message", text)
           context.parent ! Speak(text)
       }
-
+    case ChatParticipantActor.Reply(text: String) =>
+      log.info("In UserActor - receive case ChatParticipantActor.Reply(\"{}\")", text)
   }
 }
 

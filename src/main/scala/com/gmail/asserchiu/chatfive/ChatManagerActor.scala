@@ -1,12 +1,22 @@
 package com.gmail.asserchiu.chatfive
 
-import akka.actor.{ Actor, ActorLogging, Props, FSM }
+import akka.actor.{ Actor, ActorLogging, Props, FSM, ActorRef }
+import akka.routing.{ ActorRefRoutee, BroadcastRoutingLogic, Router }
 
 class ChatManagerActor extends Actor with ActorLogging with FSM[ChatManagerActorState.State, Int] {
   import ChatManagerActor._
   import ChatManagerActorState._
 
   startWith(Offline, 0)
+
+  var router = {
+    val routees = Vector.fill(5) {
+      val theChatParticipantActor = context.actorOf(Props[ChatParticipantActor])
+      context watch theChatParticipantActor
+      ActorRefRoutee(theChatParticipantActor)
+    }
+    Router(BroadcastRoutingLogic(), routees)
+  }
 
   when(Offline) {
     case Event(SetupSystem, _) =>
@@ -27,8 +37,23 @@ class ChatManagerActor extends Actor with ActorLogging with FSM[ChatManagerActor
     case Event(GoOffline, _) =>
       log.info("In ChatManagerActor - receive case GoOffline")
       goto(Offline)
+    case Event(AddChatParticipant, _) =>
+      log.info("In ChatManagerActor - receive case AddChatParticipant")
+      val theChatParticipantActor = context.actorOf(Props[ChatParticipantActor])
+      context watch theChatParticipantActor
+      router = router.addRoutee(theChatParticipantActor)
+      stay()
+    // case Event(RemoveChatParticipant(ref: String), _) =>
+    //   log.info("In ChatManagerActor - receive case RemoveChatParticipant")
+    //   router = router.removeRoutee(context.actorSelection("/user/theSystemBootActor/theChatManagerActor/"+ref))
+    //   stay()
     case Event(UserActor.Speak(text: String), _) =>
       log.info("In ChatManagerActor - receive case UserActor.Speak(\"{}\")", text)
+      router.route(UserActor.Speak(text), sender())
+      stay()
+    case Event(ChatParticipantActor.Reply(text: String), _) =>
+      // Skipped by ChatParticipantActor, message sent directly to UserActor
+      log.info("In ChatManagerActor - receive case ChatParticipantActor.Reply(\"{}\")", text)
       stay()
   }
 
@@ -41,6 +66,8 @@ object ChatManagerActor {
   case object Shutdown
   case object GoOnline
   case object GoOffline
+  case object AddChatParticipant
+  // case object RemoveChatParticipant(ref: String)
 }
 
 object ChatManagerActorState {
