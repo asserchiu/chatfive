@@ -10,7 +10,7 @@ class ConsoleActor extends Actor with ActorLogging {
     case EnableConsole =>
       log.info("In ConsoleActor - receive case EnableConsole")
       while(true) {
-        println("Supported Commands: Shutdown, GoOnline, GoOffline (Case insensitive)")
+        println("Supported Commands: Shutdown/Exit, GoOnline/Online/On, GoOffline/Offline/Off (Case insensitive)")
         sender() ! MessageFromConsole(readLine("Input message or `exec <command>`: "))
       }
   }

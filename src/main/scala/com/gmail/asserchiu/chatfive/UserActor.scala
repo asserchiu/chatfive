@@ -17,12 +17,12 @@ class UserActor extends Actor with ActorLogging {
         case Pattern(command) =>
           log.info("In UserActor - command \"{}\" detected", command)
           command.toLowerCase match {
-            case "shutdown" =>
+            case "shutdown" | "exit" =>
               context.parent ! ChatManagerActor.Shutdown
-            // case "GoOnline" =>
-            //   context.parent ! ChatManagerActor.GoOnline
-            // case "GoOffline" =>
-            //   context.parent ! ChatManagerActor.GoOffline
+            case "goonline" | "online" | "on" =>
+              context.parent ! ChatManagerActor.GoOnline
+            case "gooffline" | "offline" | "off" =>
+              context.parent ! ChatManagerActor.GoOffline
             case _ =>
               log.info("In UserActor - command \"{}\" invalid.", command)
           }
