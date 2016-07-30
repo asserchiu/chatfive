@@ -12,7 +12,7 @@ class UserActor extends Actor with ActorLogging {
       theConsoleActor ! ConsoleActor.EnableConsole
     case ConsoleActor.MessageFromConsole(text) =>
       log.info("In UserActor - receive case ConsoleActor.MessageFromConsole(\"{}\")", text)
-      context.system.shutdown()
+      context.parent ! ChatManagerActor.Shutdown
   }
 }
 

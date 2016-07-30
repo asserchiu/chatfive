@@ -10,10 +10,14 @@ class ChatManagerActor extends Actor with ActorLogging {
       log.info("In ChatManagerActor - receive case SetupSystem")
       val theUserActor = context.actorOf(UserActor.props, "theUserActor")
       theUserActor ! UserActor.Begin
+    case Shutdown =>
+      log.info("In ChatManagerActor - receive case Shutdown")
+      context.system.shutdown()
   }
 }
 
 object ChatManagerActor {
   val props = Props[ChatManagerActor]
   case object SetupSystem
+  case object Shutdown
 }
