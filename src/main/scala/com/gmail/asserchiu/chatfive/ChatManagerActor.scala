@@ -2,6 +2,8 @@ package com.gmail.asserchiu.chatfive
 
 import akka.actor.{ Actor, ActorLogging, Props, FSM, ActorRef }
 import akka.routing.{ ActorRefRoutee, BroadcastRoutingLogic, Router }
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 class ChatManagerActor extends Actor with ActorLogging with FSM[ChatManagerActorState.State, Int] {
   import ChatManagerActor._
@@ -45,7 +47,12 @@ class ChatManagerActor extends Actor with ActorLogging with FSM[ChatManagerActor
       stay()
     case Event(RemoveChatParticipant(ref: String), _) =>
       log.info("In ChatManagerActor - receive case RemoveChatParticipant(\"{}\")", ref)
-      router = router.removeRoutee(context.actorSelection(ref))
+      // TODO: Add error handling
+      val targetActorSelection = context.actorSelection(ref)
+      val targetActorRef = Await.result(targetActorSelection.resolveOne(1 seconds), 1 seconds)
+      context.unwatch(targetActorRef)
+      context.stop(targetActorRef)
+      router = router.removeRoutee(ActorRefRoutee(targetActorRef))
       stay()
     case Event(UserActor.Speak(text: String), _) =>
       log.info("In ChatManagerActor - receive case UserActor.Speak(\"{}\")", text)
