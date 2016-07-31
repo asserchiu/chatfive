@@ -12,9 +12,18 @@ class UserActor extends Actor with ActorLogging {
       theConsoleActor ! ConsoleActor.EnableConsole
     case ConsoleActor.MessageFromConsole(text) =>
       log.info("In UserActor - receive case ConsoleActor.MessageFromConsole(\"{}\")", text)
-      val Pattern = "exec (.*)".r
+      val CommandPattern = "exec (.*)".r
+      val CommandPatternArg = "exec (.*) (.*)".r
       text match {
-        case Pattern(command) =>
+        case CommandPatternArg(command, arg) =>
+          log.info("In UserActor - command \"{}\" detected", command)
+          command.toLowerCase match {
+            case "removechatparticipant" | "remove" | "kill" =>
+              context.parent ! ChatManagerActor.RemoveChatParticipant(arg)
+            case _ =>
+              log.info("In UserActor - command \"{}\" invalid.", command)
+          }
+        case CommandPattern(command) =>
           log.info("In UserActor - command \"{}\" detected", command)
           command.toLowerCase match {
             case "shutdown" | "exit" =>
@@ -25,8 +34,6 @@ class UserActor extends Actor with ActorLogging {
               context.parent ! ChatManagerActor.GoOffline
             case "addchatparticipant" | "add" =>
               context.parent ! ChatManagerActor.AddChatParticipant
-            // case "removechatparticipant" | "remove" | "kill" =>
-            //   context.parent ! ChatManagerActor.RemoveChatParticipant(readLine("Input ChatParticipant child name: "))
             case _ =>
               log.info("In UserActor - command \"{}\" invalid.", command)
           }

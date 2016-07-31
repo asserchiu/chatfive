@@ -43,10 +43,10 @@ class ChatManagerActor extends Actor with ActorLogging with FSM[ChatManagerActor
       context watch theChatParticipantActor
       router = router.addRoutee(theChatParticipantActor)
       stay()
-    // case Event(RemoveChatParticipant(ref: String), _) =>
-    //   log.info("In ChatManagerActor - receive case RemoveChatParticipant")
-    //   router = router.removeRoutee(context.actorSelection("/user/theSystemBootActor/theChatManagerActor/"+ref))
-    //   stay()
+    case Event(RemoveChatParticipant(ref: String), _) =>
+      log.info("In ChatManagerActor - receive case RemoveChatParticipant(\"{}\")", ref)
+      router = router.removeRoutee(context.actorSelection(ref))
+      stay()
     case Event(UserActor.Speak(text: String), _) =>
       log.info("In ChatManagerActor - receive case UserActor.Speak(\"{}\")", text)
       router.route(UserActor.Speak(text), sender())
@@ -67,7 +67,7 @@ object ChatManagerActor {
   case object GoOnline
   case object GoOffline
   case object AddChatParticipant
-  // case object RemoveChatParticipant(ref: String)
+  case class RemoveChatParticipant(ref: String)
 }
 
 object ChatManagerActorState {
