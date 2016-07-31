@@ -21,10 +21,10 @@ Anything else as a message.
 Supported Commands
 -------------------------
 
-* Shutdown/Exit
-* GoOnline/Online/On
-* GoOffline/Offline/Off
-* AddChatParticipant/Add
-* RemoveChatParticipant/Remove/Kill <ActorPath>
+* `Shutdown`/`Exit`
+* `GoOnline`/`Online`/`On`
+* `GoOffline`/`Offline`/`Off`
+* `AddChatParticipant`/`Add`
+* `RemoveChatParticipant <ActorPath>`/`Remove <ActorPath>`/`Kill <ActorPath>`
 
 All commands are case insensitive.
