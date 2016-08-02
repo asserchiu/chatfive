@@ -88,16 +88,16 @@ class ChatManagerActor extends Actor with ActorLogging with FSM[ChatManagerActor
     case Event(UserActor.Speak(text: String), _) =>
       log.info("In ChatManagerActor - receive Online case UserActor.Speak(\"{}\")", text)
       val msg = List(ZonedDateTime.now(ZoneId.of("UTC")), sender().toString(), text)
-      println(msg.mkString(", "))
+      // println(msg.mkString(", "))
       chatHistory = msg.mkString(", ") :: chatHistory
       router.route(UserActor.Speak(text), context.self)
       stay()
     case Event(ChatParticipantActor.Reply(text: String), _) =>
       log.info("In ChatManagerActor - receive Online case ChatParticipantActor.Reply(\"{}\")", text)
       val msg = List(ZonedDateTime.now(ZoneId.of("UTC")), sender().toString(), text)
-      println(msg.mkString(", "))
+      // println(msg.mkString(", "))
       chatHistory = msg.mkString(", ") :: chatHistory
-      theUserActor ! ChatParticipantActor.Reply(text)
+      theUserActor.forward(ChatParticipantActor.Reply(text))
       stay()
   }
 

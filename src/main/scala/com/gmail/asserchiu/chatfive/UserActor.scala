@@ -1,6 +1,7 @@
 package com.gmail.asserchiu.chatfive
 
 import akka.actor.{ Actor, ActorLogging, Props }
+import java.time._
 
 class UserActor extends Actor with ActorLogging {
   import UserActor._
@@ -39,10 +40,14 @@ class UserActor extends Actor with ActorLogging {
           }
         case _ =>
           log.info("In UserActor - \"{}\" is a normal message", text)
+          val msg = List(ZonedDateTime.now(ZoneId.of("UTC")), context.self.path.toStringWithoutAddress, text)
+          println(msg.mkString(", "))
           context.parent ! Speak(text)
       }
     case ChatParticipantActor.Reply(text: String) =>
       log.info("In UserActor - receive case ChatParticipantActor.Reply(\"{}\")", text)
+      val msg = List(ZonedDateTime.now(ZoneId.of("UTC")), sender().path.toStringWithoutAddress, text)
+      println(msg.mkString(", "))
   }
 }
 

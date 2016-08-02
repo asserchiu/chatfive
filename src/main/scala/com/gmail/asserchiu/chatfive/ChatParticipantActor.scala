@@ -8,7 +8,7 @@ class ChatParticipantActor extends Actor with ActorLogging {
   def receive = {
     case UserActor.Speak(text) =>
       log.info("In ChatParticipantActor - receive case UserActor.Speak(\"{}\")", text)
-      sender() ! Reply("Echo from "+context.toString())
+      sender() ! Reply("Echo \""+text+"\" from "+context.toString())
   }
 }
 
