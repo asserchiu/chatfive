@@ -6,7 +6,7 @@ import com.typesafe.config.ConfigFactory
 
 object ApplicationMain extends App {
   if (args.isEmpty || args.head.toLowerCase == "userconsole") {
-    println("Start UserConsole")
+    println("Start UserConsoleSystem")
     ActorSystem("UserConsoleSystem", ConfigFactory.load("UserConsoleSetting"))
   }
   if (args.isEmpty || args.head.toLowerCase == "chatmanager") {

@@ -29,6 +29,7 @@ class UserActor extends Actor with ActorLogging {
           command.toLowerCase match {
             case "shutdown" | "exit" =>
               context.parent ! ChatManagerActor.Shutdown
+              context.system.terminate()
             case "goonline" | "online" | "on" =>
               context.parent ! ChatManagerActor.GoOnline
             case "gooffline" | "offline" | "off" =>
