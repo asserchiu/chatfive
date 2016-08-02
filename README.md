@@ -6,10 +6,18 @@ A simple chatroom(-like) application.
 Built with [Scala](http://www.scala-lang.org) and [Akka](http://akka.io).
 
 
-How to use?
+How to run?
 -------------------------
 
-Run with `sbt run`.
+Run `sbt run` for single JVM mode.
+
+or
+
+Run `sbt "run UserConsole"` first, then run `sbt "run ChatManager"` in other console for multi JVM mode.
+
+
+How to use?
+-------------------------
 
 Commit `exec <command>` in the command prompt to execute command.
 
